@@ -1,4 +1,4 @@
-# MaD Walker Demo
-Demo for our reconstructive and predictive optimal control simulation of biomechanical models.
+# PoMMAI Demo
+Demo for our project "Personalization of Musculoskeletal Models through Artificial Intelligence (PoMMAI)"
 
-=> [Get to the demo](https://mad-lab-fau.github.io/MaD_Walker_Demo/)
+=> [Get to the demo](https://mad-lab-fau.github.io/PoMMAI_Demo/)

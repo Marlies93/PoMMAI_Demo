@@ -15,13 +15,13 @@ function Walker() {
   this.linesdrawn = false;
 
   // walker specific variables 
-  this.walker_speed = 3;
-  this.walker_speedStrings = new Array("slowwalking", "normwalking", "fastwalking", "slowrunning", "fastrunning");
-  this.walker_slope = 4;
-  this.walker_slopeValues = new Array(-30, -20, -10, 0, 10, 20, 30);
-  this.walker_slopeStrings = new Array("m30", "m20", "m10", "00", "10", "20", "30");
-  this.walker_gravity = 2;
-  this.walker_gravityStrings = new Array("1_62", "9_81", "24_79");
+  this.walker_speed = 2;
+  this.walker_speedStrings = new Array("normwalking", "fastwalking");
+  this.walker_slope = 1;
+  this.walker_slopeValues = new Array(1).fill(0);
+  this.walker_slopeStrings = new Array("35");
+  this.walker_gravity = 1;
+  this.walker_gravityStrings = new Array("PoMMAI");
 
   //general stuff
   this.walker_sticks = true;
@@ -39,7 +39,7 @@ function Walker() {
   //--------------INTERNAL IABLES--------------------
   this.walkersizefactor = 1500;
 
-  this.nummarkersMaD = 15;
+  this.numSegmentEndsMaD = 10;
   this.durationstd = 0;
   this.dotsonratio = 0;
   this.dotduration = 0;
@@ -61,10 +61,10 @@ Walker.prototype.init = function () {
   var n;
 
   //get initial data set
-  var subjectStr = "Sub150716_1";
+  var subjectStr = "Sub_090816_1";
   var speedString = this.walker_speedStrings[this.walker_speed - 1];
-  var slopeStr = "slope_" + this.walker_slopeStrings[this.walker_slope - 1];
-  var gravityStr = "gravity_" + this.walker_gravityStrings[this.walker_gravity - 1];
+  var slopeStr = this.walker_slopeStrings[this.walker_slope - 1];
+  var gravityStr = this.walker_gravityStrings[this.walker_gravity - 1];
   this.dataStr = subjectStr + "_" + speedString + "_" + slopeStr + "_" + gravityStr;
   console.log(this.dataStr);
   
@@ -76,7 +76,7 @@ Walker.prototype.init = function () {
   this.durationon = (this.dotsonratio) * this.flicker_duration;
   this.durationoff = (1 - (this.dotsonratio)) * this.flicker_duration;
 
-  for (n = 0; n < this.nummarkersMaD; n++) {
+  for (n = 0; n < this.numSegmentEndsMaD; n++) {
     this.dotstats[n] = (Math.random() < this.dotsonratio);
     if (this.dotstats[n]) {
       this.dottime[n] = Math.random() * (this.durationon) * 1000;
@@ -111,7 +111,7 @@ Walker.prototype.calcNode = function (curtime) { // curtime in ms
 Walker.prototype.drawWalker = function (curtime) {
 
   var n;
-  for (n = 0; n < this.nummarkersMaD; n++) {
+  for (n = 0; n < this.numSegmentEndsMaD; n++) {
     while (curtime > this.dottime[n]) {
       if (this.dotstats[n] > 0) {
         this.dotstats[n] = 0;
@@ -141,8 +141,8 @@ Walker.prototype.drawWalker = function (curtime) {
 
   var curnode = this.calcNode(curtime);
 
-  var vectors  = new Array(this.nummarkersMaD+2); // plus two points to define the ground
-  for (n = 0; n < this.nummarkersMaD; n++) {
+  var vectors  = new Array(this.numSegmentEndsMaD+2); // plus two points to define the ground
+  for (n = 0; n < this.numSegmentEndsMaD; n++) {
     var xpos =   this.offsetx + (   this.data[this.dataStr][curnode][(n+1)*2  ] * 1000 / this.walkersizefactor) * this.walker_size * this.pixelsperdegree;
     var ypos = 2*this.offsety + (-1*this.data[this.dataStr][curnode][(n+1)*2+1] * 1000 / this.walkersizefactor) * this.walker_size * this.pixelsperdegree;
     vectors[n] = new Array(xpos, ypos);
@@ -171,10 +171,10 @@ Walker.prototype.drawWalker = function (curtime) {
 
   // Draw metabolic rate
   this.ctx.font = "14px Arial";
-  this.ctx.fillText("Metabolic Rate:", 10, 20); 
-  var metRate = this.data[this.dataStr][curnode][30];
+  this.ctx.fillText("Marker MSD:", 10, 20); 
+  var metRate = this.data[this.dataStr][curnode][22];
   this.ctx.lineWidth = 10;
-  this.drawLineX(new Array(110, 15), new Array(metRate*2+110, 15), "#003660");
+  this.drawLineX(new Array(95, 15), new Array(metRate*0.5+95, 15), "#003660");
   this.ctx.lineWidth = 1;
 
   if (this.walker_sticks) {
@@ -193,14 +193,6 @@ Walker.prototype.drawWalker = function (curtime) {
       this.drawLineX(vectors[7], vectors[8], this.walker_colour);
       this.drawLineX(vectors[8], vectors[9], this.walker_colour);
       this.drawLineX(vectors[9], vectors[7], this.walker_colour); // back to the ankle
-      // Right foot without deformation
-      this.drawLineX(vectors[3], vectors[10], this.walker_colour);
-      this.drawLineX(vectors[10], vectors[11], this.walker_colour);
-      this.drawLineX(vectors[11], vectors[3], this.walker_colour); // back to the ankle
-      // Left foot without deformation
-      this.drawLineX(vectors[7], vectors[12], this.walker_colour);
-      this.drawLineX(vectors[12], vectors[13], this.walker_colour);
-      this.drawLineX(vectors[13], vectors[7], this.walker_colour); // back to the ankle
     }
   }
 }

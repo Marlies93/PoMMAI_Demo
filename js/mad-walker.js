@@ -4,13 +4,14 @@ var walk = new Walker();
 var c, cc;
 var timer, starttime, curtime, timediff, lastmousetime;
 
-var speedslider = document.getElementById('speedslider');
-var slopeslider = document.getElementById('slopeslider');
-var gravityslider = document.getElementById('gravityslider');
+var dropdownParticipant = document.getElementById('dropdownParticipant');
+var dropdownSpeed = document.getElementById('dropdownSpeed');
+var dropdownTrial = document.getElementById('dropdownTrial');
+var modelslider = document.getElementById('modelslider');
 var playbackspeedslider = document.getElementById('playbackspeedslider');
 var btnreset = document.getElementById('btnreset');
 var pauseswitch = document.getElementById('pauseswitch');
-var linesswitch = document.getElementById('linesswitch');
+var markerswitch = document.getElementById('markerswitch');
 
 // Not using these currently 
 var colorpicker = document.getElementById('colorpicker');
@@ -72,21 +73,24 @@ function init() {
     }
   });
 
-  linesswitch.addEventListener("change", function () {
-    walk.walker_sticks = !walk.walker_sticks;
+  markerswitch.addEventListener("change", function () {
+    walk.walker_markers = !walk.walker_markers;
     lines = !lines;
   });
 
-
-  speedslider.addEventListener("input", function () {
+  dropdownParticipant.addEventListener("input", function () {
     change_controls();
   }, false);
 
-  slopeslider.addEventListener("input", function () {
+  dropdownSpeed.addEventListener("input", function () {
     change_controls();
   }, false);
 
-  gravityslider.addEventListener("input", function () {
+  dropdownTrial.addEventListener("input", function () {
+    change_controls();
+  }, false);
+
+  modelslider.addEventListener("input", function () {
     change_controls();
   }, false);
 
@@ -123,19 +127,21 @@ function init_walker() {
 }
 
 function reset_controls() {
-  speedslider.value = 3;
-  slopeslider.value = 4;
-  gravityslider.value = 2;
+  dropdownParticipant.value = "090816_1";
+  dropdownSpeed.value = "norm";
+  dropdownTrial.value = "17";
+  modelslider.value = 1;
   playbackspeedslider.value = 1;
 
-  linesswitch.checked = true;
+  markerswitch.checked = true;
   pauseswitch.checked = false;
 }
 
 function change_controls() {
-  walk.walker_speed = speedslider.value;
-  walk.walker_slope = slopeslider.value;
-  walk.walker_gravity = gravityslider.value;
+  walk.walker_participant = dropdownParticipant.value;
+  walk.walker_speed = dropdownSpeed.value;
+  walk.walker_trial = dropdownTrial.value;
+  walk.walker_model = modelslider.value;
   walk.walker_PlaybackSpeed = playbackspeedslider.value;
   walk.init();
 }

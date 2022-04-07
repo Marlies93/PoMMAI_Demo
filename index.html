@@ -140,25 +140,34 @@
 
 		<div class="controlbar-wrapper" style="display: inline-block; text-align: left;">
 			<div class="controlbar">
-				<h2>Speed</h2>
-				<div class="fl-left">Normal</div>
-				<div class="fl-right">Fast</div>
-				<p>
-					<input id="speedslider" class="slider" type="range" min="1" max ="2" step ="1" value= "2">
-				</p>
+				<h2>Data</h2>
+				<select id = "dropdownParticipant" style="width: 32%;">
+					<option>090816_1</option>
+					<option>090816_2</option>
+					<option>100816_1</option>
+					<option>100816_2</option>
+					<option>160816_1</option>
+					<option>160816_2</option>
+					<option>190816_1</option>
+					<option>230816_1</option>
+					<option>230816_2</option>
+				</select>
 
-				<h2>Slope</h2>
-				<div class="fl-left">0°</div>
-				<div class="fl-right">0°</div>
-				<p>
-					<input id="slopeslider" class="slider" type="range" min="1" max ="1" step ="1" value= "1">
-				</p>
+				<select id = "dropdownSpeed" style="width: 32%;">
+					<option>norm</option>
+					<option>fast</option>
+				</select>
 
-				<h2>Gravity</h2>
-				<div class="fl-left">Earth</div>
-				<div class="fl-right">Earth</div>
+				<select id = "dropdownTrial" style="width: 32%;">
+					<option>17</option>
+					<option>18</option>
+				</select>
+				
+				<h2>Model</h2>
+				<div class="fl-left">PoMMAI</div>
+				<div class="fl-right">Scaled</div>
 				<p>
-					<input id="gravityslider" class="slider" type="range" min="1" max ="1" step ="1" value= "1">
+					<input id="modelslider" class="slider" type="range" min="1" max ="2" step ="1" value= "1">
 				</p>
 
 				<h2>Playback Speed</h2>
@@ -168,8 +177,8 @@
 					<input id="playbackspeedslider" class="slider" type="range" min="0.25" max ="1.75" step ="0.25" value= "1">
 				</p>
 
-				<h2 class="inline">Lines</h2>
-				<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="linesswitch">
+				<h2 class="inline">Markers</h2>
+				<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="markerswitch">
 
 				<h2>Pause</h2>
 				<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="pauseswitch">

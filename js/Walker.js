@@ -15,23 +15,19 @@ function Walker() {
   this.linesdrawn = false;
 
   // walker specific variables 
-  this.walker_speed = 2;
-  this.walker_speedStrings = new Array("normwalking", "fastwalking");
-  this.walker_slope = 1;
-  this.walker_slopeValues = new Array(1).fill(0);
-  this.walker_slopeStrings = new Array("35");
-  this.walker_gravity = 1;
-  this.walker_gravityStrings = new Array("PoMMAI");
+  this.walker_participant = "090816_1"
+  this.walker_speed = "norm";
+  this.walker_trial = "17";
+  this.walker_model = 1;
+  this.walker_modelStrings = new Array("PoMMAI", "Scaled");
 
   //general stuff
-  this.walker_sticks = true;
+  this.walker_markers = true;
   this.walker_PlaybackSpeed = 1;
 
   this.flicker_ontime = 100;
   this.flicker_duration = 1;
   this.flicker_randomness = 0;
-
-  this.markers_invisible = null;
 
   //current data
   this.dataStr = "";
@@ -61,13 +57,13 @@ Walker.prototype.init = function () {
   var n;
 
   //get initial data set
-  var subjectStr = "Sub_090816_1";
-  var speedString = this.walker_speedStrings[this.walker_speed - 1];
-  var slopeStr = this.walker_slopeStrings[this.walker_slope - 1];
-  var gravityStr = this.walker_gravityStrings[this.walker_gravity - 1];
-  this.dataStr = subjectStr + "_" + speedString + "_" + slopeStr + "_" + gravityStr;
+  var participantStr = this.walker_participant;
+  var speedString = this.walker_speed;
+  var trialStr = this.walker_trial;
+  var modelStr = this.walker_modelStrings[this.walker_model - 1];
+  this.dataStr = "Sub_" + participantStr + "_" + speedString + "walking_" 
+    + trialStr + "_" + modelStr;
   console.log(this.dataStr);
-  
 
   //dot flicker initialization stuff
   this.durationstd = this.flicker_randomness / 100;
@@ -151,7 +147,7 @@ Walker.prototype.drawWalker = function (curtime) {
   }
 
   // Draw floor
-  var slope = this.walker_slopeValues[this.walker_slope - 1]/180*Math.PI; // slope in radians
+  var slope = 0 // this.walker_slopeValues[this.walker_slope - 1]/180*Math.PI; // slope in radians
   var xval1 = -5000;
   var xval2 = 5000;
   var yval1 = 0;
@@ -170,6 +166,7 @@ Walker.prototype.drawWalker = function (curtime) {
   this.drawLineX(vectors[n+1], vectors[n+2], "#000000");
 
   // Draw metabolic rate
+  this.ctx.fillStyle = this.walker_colour;
   this.ctx.font = "14px Arial";
   this.ctx.fillText("Marker MSD:", 10, 20); 
   var metRate = this.data[this.dataStr][curnode][22];

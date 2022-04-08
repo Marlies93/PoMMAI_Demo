@@ -146,6 +146,9 @@ function change_controls() {
   walk.walker_model = modelslider.value;
   walk.walker_PlaybackSpeed = playbackspeedslider.value;
   walk.init();
+  cc.fillStyle = 'white';
+  cc.fillRect(0, 0, c.width, c.height);
+  walk.drawWalker(curtime);
 }
 
 function change_dropdown() {

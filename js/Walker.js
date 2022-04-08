@@ -8,8 +8,10 @@ function Walker() {
   this.offsetx = 0;
   this.offsety = 0;
   this.walker_colour = "#000000";
+  this.marker_colour_sim = "#003660";
+  this.marker_colour_mea = "#179c7d";
   this.sticks_force_visible = false;
-  this.dotsize = 4;
+  this.markerRadius = 5;
 
   this.dotShapes = [];
   this.linesdrawn = false;
@@ -112,6 +114,7 @@ function Walker() {
   this.walkersizefactor = 1500;
 
   this.numSegmentEndsMaD = 10;
+  this.numMarkersMaD = 11;
   this.durationstd = 0;
   this.dotsonratio = 0;
   this.dotduration = 0;
@@ -213,15 +216,6 @@ Walker.prototype.drawWalker = function (curtime) {
 
   var curnode = this.calcNode(curtime);
 
-  var vectors  = new Array(this.numSegmentEndsMaD+2); // plus two points to define the ground
-  for (n = 0; n < this.numSegmentEndsMaD; n++) {
-    var xpos =   this.offsetx + (   this.data[this.dataStr][curnode][(n+1)*2  ] * 1000 / this.walkersizefactor) * this.walker_size * this.pixelsperdegree;
-    var ypos = 2*this.offsety + (-1*this.data[this.dataStr][curnode][(n+1)*2+1] * 1000 / this.walkersizefactor) * this.walker_size * this.pixelsperdegree;
-    vectors[n] = new Array(xpos, ypos);
-   
-    this.drawDot(xpos, ypos);
-  }
-
   // Draw floor
   var slope = 0 // this.walker_slopeValues[this.walker_slope - 1]/180*Math.PI; // slope in radians
   var xval1 = -5000;
@@ -237,47 +231,90 @@ Walker.prototype.drawWalker = function (curtime) {
   var ypos1 =  2* this.offsety + (yval1 / this.walkersizefactor) * this.walker_size * this.pixelsperdegree;
   var xpos2 =     this.offsetx + (xval2 / this.walkersizefactor) * this.walker_size * this.pixelsperdegree;
   var ypos2 =  2* this.offsety + (yval2 / this.walkersizefactor) * this.walker_size * this.pixelsperdegree;
-  vectors[n+1] = new Array(xpos1, ypos2);
-  vectors[n+2] = new Array(xpos2, ypos1);
-  this.drawLineX(vectors[n+1], vectors[n+2], "#000000");
+  this.drawLineX(new Array(xpos1, ypos2), new Array(xpos2, ypos1), "#000000");
 
   // Draw metabolic rate
   this.ctx.fillStyle = this.walker_colour;
   this.ctx.font = "14px Arial";
   this.ctx.fillText("Marker MSD:", 10, 20); 
-  var metRate = this.data[this.dataStr][curnode][22];
+  var iMarkerMSD = 22;
+  var metRate = this.data[this.dataStr][curnode][iMarkerMSD];
   this.ctx.lineWidth = 10;
   this.drawLineX(new Array(95, 15), new Array(metRate*0.5+95, 15), "#003660");
-  this.ctx.lineWidth = 1;
+  this.ctx.lineWidth = 2;
 
-  if (this.walker_sticks) {
-    if (this.walker_object == 0) {
-      // Trunk
-      this.drawLineX(vectors[0], vectors[1], this.walker_colour);
-      // Rigth leg
-      this.drawLineX(vectors[1], vectors[2], this.walker_colour);
-      this.drawLineX(vectors[2], vectors[3], this.walker_colour);
-      this.drawLineX(vectors[3], vectors[4], this.walker_colour);
-      this.drawLineX(vectors[4], vectors[5], this.walker_colour);
-      this.drawLineX(vectors[5], vectors[3], this.walker_colour); // back to the ankle
-      // Left leg
-      this.drawLineX(vectors[1], vectors[6], this.walker_colour);
-      this.drawLineX(vectors[6], vectors[7], this.walker_colour);
-      this.drawLineX(vectors[7], vectors[8], this.walker_colour);
-      this.drawLineX(vectors[8], vectors[9], this.walker_colour);
-      this.drawLineX(vectors[9], vectors[7], this.walker_colour); // back to the ankle
+  // Draw lines of stick figure 
+  if (this.walker_sticks && this.walker_object == 0) {
+
+    // Get coordindates of segment ends
+    var vectors  = new Array(this.numSegmentEndsMaD);
+    for (n = 0; n < this.numSegmentEndsMaD; n++) {
+      var xpos =   this.offsetx + (   this.data[this.dataStr][curnode][(n+1)*2  ] * 1000 / this.walkersizefactor) * this.walker_size * this.pixelsperdegree;
+      var ypos = 2*this.offsety + (-1*this.data[this.dataStr][curnode][(n+1)*2+1] * 1000 / this.walkersizefactor) * this.walker_size * this.pixelsperdegree;
+      vectors[n] = new Array(xpos, ypos);
+    }
+
+    // Trunk
+    this.drawLineX(vectors[0], vectors[1], this.walker_colour);
+    // Rigth leg
+    this.drawLineX(vectors[1], vectors[2], this.walker_colour);
+    this.drawLineX(vectors[2], vectors[3], this.walker_colour);
+    this.drawLineX(vectors[3], vectors[4], this.walker_colour);
+    this.drawLineX(vectors[4], vectors[5], this.walker_colour);
+    this.drawLineX(vectors[5], vectors[3], this.walker_colour); // back to the ankle
+    // Left leg
+    this.drawLineX(vectors[1], vectors[6], this.walker_colour);
+    this.drawLineX(vectors[6], vectors[7], this.walker_colour);
+    this.drawLineX(vectors[7], vectors[8], this.walker_colour);
+    this.drawLineX(vectors[8], vectors[9], this.walker_colour);
+    this.drawLineX(vectors[9], vectors[7], this.walker_colour); // back to the ankle
+  }
+
+  // Draw simulated markers
+  if (this.walker_markers && this.walker_object == 0) {
+
+    // Go trough all markers
+    var iFirst = iMarkerMSD + 1;
+    for (n = 0; n < this.numMarkersMaD; n++) {
+      // Get coordinates
+      var xpos = this.offsetx + (this.data[this.dataStr][curnode][iFirst + n * 2] * 1000 / this.walkersizefactor) * this.walker_size * this.pixelsperdegree;
+      var ypos = 2 * this.offsety + (-1 * this.data[this.dataStr][curnode][iFirst+ n * 2 + 1] * 1000 / this.walkersizefactor) * this.walker_size * this.pixelsperdegree;
+
+      // Draw
+      this.drawDot(xpos, ypos);
+    }
+  }
+
+  // Draw measured markers
+  if (this.walker_markers && this.walker_object == 0) {
+
+    // Go trough all markers
+    var iFirst = iMarkerMSD + 1 + 2 * this.numMarkersMaD;
+    for (n = 0; n < this.numMarkersMaD; n++) {
+      // Get coordinates
+      var xpos = this.offsetx + (this.data[this.dataStr][curnode][iFirst + n * 2] * 1000 / this.walkersizefactor) * this.walker_size * this.pixelsperdegree;
+      var ypos = 2 * this.offsety + (-1 * this.data[this.dataStr][curnode][iFirst + n * 2 + 1] * 1000 / this.walkersizefactor) * this.walker_size * this.pixelsperdegree;
+
+      // Draw
+      this.drawCross(xpos, ypos);
     }
   }
 }
 
 Walker.prototype.drawDot = function (x, y) {
-  this.ctx.fillStyle = this.walker_colour;
+  this.ctx.fillStyle = this.marker_colour_sim;
   this.ctx.beginPath();
-  this.ctx.arc(x, y, 3, 0, 2 * Math.PI);
+  this.ctx.arc(x, y, this.markerRadius, 0, 2 * Math.PI);
   this.ctx.fill();
   this.ctx.closePath();
 }
 
+Walker.prototype.drawCross = function (x, y) {
+  m = this.markerRadius * Math.cos(45 / 180 * Math.PI);
+  n = this.markerRadius * Math.sin(45 / 180 * Math.PI);
+  this.drawLineX(new Array(x+n, y+m), new Array(x-n, y-m), this.marker_colour_mea);
+  this.drawLineX(new Array(x-n, y+m), new Array(x+n, y-m), this.marker_colour_mea);
+}
 
 Walker.prototype.drawLineX = function (vectorFrom, vectorTo, color) {
 

@@ -240,7 +240,10 @@ Walker.prototype.drawWalker = function (curtime) {
   var iMarkerMSD = 22;
   var metRate = this.data[this.dataStr][curnode][iMarkerMSD];
   this.ctx.lineWidth = 10;
-  this.drawLineX(new Array(95, 15), new Array(metRate*0.5+95, 15), "#003660");
+  vectorFrom = new Array(95, 15);
+  vectorTo = new Array(metRate*0.5+95, 15);
+  this.drawLineX(vectorFrom, vectorTo, "#003660");
+  this.ctx.fillText(metRate.toFixed(1).toString() + " mm²", vectorTo[0]+5, 20);
   this.ctx.lineWidth = 2;
 
   // Draw lines of stick figure 

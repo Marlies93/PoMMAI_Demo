@@ -133,7 +133,7 @@ function reset_controls() {
   dropdownSpeed.value = "norm";
   change_dropdown();
   modelslider.value = 1;
-  playbackspeedslider.value = 1;
+  playbackspeedslider.value = 0.25;
 
   markerswitch.checked = true;
   pauseswitch.checked = false;

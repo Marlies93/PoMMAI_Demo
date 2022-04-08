@@ -101,7 +101,7 @@ function Walker() {
 
   //general stuff
   this.walker_markers = true;
-  this.walker_PlaybackSpeed = 1;
+  this.walker_PlaybackSpeed = 0.25;
 
   this.flicker_ontime = 100;
   this.flicker_duration = 1;

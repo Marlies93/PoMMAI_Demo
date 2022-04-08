@@ -79,10 +79,12 @@ function init() {
   });
 
   dropdownParticipant.addEventListener("input", function () {
+    change_dropdown();
     change_controls();
   }, false);
 
   dropdownSpeed.addEventListener("input", function () {
+    change_dropdown();
     change_controls();
   }, false);
 
@@ -129,7 +131,7 @@ function init_walker() {
 function reset_controls() {
   dropdownParticipant.value = "090816_1";
   dropdownSpeed.value = "norm";
-  dropdownTrial.value = "17";
+  change_dropdown();
   modelslider.value = 1;
   playbackspeedslider.value = 1;
 
@@ -144,6 +146,24 @@ function change_controls() {
   walk.walker_model = modelslider.value;
   walk.walker_PlaybackSpeed = playbackspeedslider.value;
   walk.init();
+}
+
+function change_dropdown() {
+
+  // clear old options
+  dropdownTrial.innerHTML = "";
+
+  // fill all options
+  var optionArray = walk.trials[dropdownParticipant.value][dropdownSpeed.value]
+  for(var option in optionArray){
+    var newOption = document.createElement("option");
+    newOption.value = optionArray[option];
+    newOption.innerHTML = optionArray[option];
+    dropdownTrial.options.add(newOption);
+  }
+
+  // select the first value
+  dropdownTrial.value = optionArray[0]
 }
 
 

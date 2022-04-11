@@ -244,6 +244,24 @@ Walker.prototype.drawWalker = function (curtime) {
   vectorTo = new Array(metRate*0.5+95, 15);
   this.drawLineX(vectorFrom, vectorTo, "#003660");
   this.ctx.fillText(metRate.toFixed(1).toString() + " mm²", vectorTo[0]+5, 20);
+  this.ctx.fillText("Length", 10, 40);
+  this.ctx.fillText("HAT:", 30, 60);
+  this.ctx.fillText(this.data[this.dataStr][curnode][67].toFixed(3).toString() + " m", 90, 60);
+  this.ctx.fillText("Femur:", 30, 80);
+  this.ctx.fillText(this.data[this.dataStr][curnode][68].toFixed(3).toString() + " m", 90, 80);
+  this.ctx.fillText("Tibia:", 30, 100);
+  this.ctx.fillText(this.data[this.dataStr][curnode][69].toFixed(3).toString() + " m", 90, 100);
+  this.ctx.fillText("Foot:", 30, 120);
+  this.ctx.fillText(this.data[this.dataStr][curnode][70].toFixed(3).toString() + " m", 90, 120);
+  this.ctx.fillText("Mass", 10, 140);
+  this.ctx.fillText("HAT:", 30, 160);
+  this.ctx.fillText(this.data[this.dataStr][curnode][71].toFixed(3).toString() + " kg", 90, 160);
+  this.ctx.fillText("Femur:", 30, 180);
+  this.ctx.fillText(this.data[this.dataStr][curnode][72].toFixed(3).toString() + " kg", 90, 180);
+  this.ctx.fillText("Tibia:", 30, 200);
+  this.ctx.fillText(this.data[this.dataStr][curnode][73].toFixed(3).toString() + " kg", 90, 200);
+  this.ctx.fillText("Foot:", 30, 220);
+  this.ctx.fillText(this.data[this.dataStr][curnode][74].toFixed(3).toString() + " kg", 90, 220);
   this.ctx.lineWidth = 2;
 
   // Draw lines of stick figure 
